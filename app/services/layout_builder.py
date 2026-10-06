@@ -1,5 +1,4 @@
 from typing import List
-
 from app.models import ComicPanel
 
 
@@ -10,14 +9,11 @@ def build_comic_layout(
 ) -> List[ComicPanel]:
 
     panels = []
-
     story_panels = {}
 
     if isinstance(story, dict):
         for item in story.get("panels", []):
-            story_panels[
-                item.get("panel_number")
-            ] = item
+            story_panels[item.get("panel_number")] = item
 
     for index, panel in enumerate(
         outline.panels
@@ -50,6 +46,12 @@ def build_comic_layout(
             else panel.get("image_prompt", "")
         )
 
+        image_url = (
+            image_urls[index - 1]
+            if index - 1 < len(image_urls)
+            else ""
+        )
+
         story_data = story_panels.get(
             panel_number,
             {}
@@ -61,14 +63,9 @@ def build_comic_layout(
                 title=title,
                 scene_description=scene_description,
                 image_prompt=image_prompt,
-                caption=story_data.get(
-                    "caption",
-                    ""
-                ),
-                narration=story_data.get(
-                    "narration",
-                    ""
-                )
+                image_url=image_url,
+                caption=story_data.get("caption", ""),
+                narration=story_data.get("narration", "")
             )
         )
 

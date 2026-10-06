@@ -15,6 +15,7 @@ class ComicPanel(BaseModel):
     title: str
     scene_description: str
     image_prompt: str
+    image_url: str = ""
     caption: str = ""
     narration: str = ""
 

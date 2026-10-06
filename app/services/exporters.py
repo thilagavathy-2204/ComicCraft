@@ -1,6 +1,5 @@
 from pathlib import Path
 from datetime import datetime
-
 from fpdf import FPDF
 
 
@@ -17,10 +16,7 @@ def save_pdf(layout) -> str:
         "%Y%m%d_%H%M%S"
     )
 
-    filename = (
-        f"comic_{timestamp}.pdf"
-    )
-
+    filename = f"comic_{timestamp}.pdf"
     output_path = output_dir / filename
 
     pdf = FPDF()
@@ -34,11 +30,7 @@ def save_pdf(layout) -> str:
 
         pdf.add_page()
 
-        pdf.set_font(
-            "Arial",
-            "B",
-            18
-        )
+        pdf.set_font("Arial", "B", 18)
 
         pdf.cell(
             0,
@@ -50,11 +42,25 @@ def save_pdf(layout) -> str:
 
         pdf.ln(5)
 
-        pdf.set_font(
-            "Arial",
-            "",
-            12
-        )
+        # Add comic image
+        if panel.image_url:
+
+            image_path = Path(
+                panel.image_url.lstrip("/")
+            )
+
+            if image_path.exists():
+
+                pdf.image(
+                    str(image_path),
+                    x=15,
+                    y=35,
+                    w=180
+                )
+
+                pdf.ln(125)
+
+        pdf.set_font("Arial", "", 12)
 
         pdf.multi_cell(
             0,
@@ -95,8 +101,6 @@ def save_pdf(layout) -> str:
                 f"Narration: {panel.narration}"
             )
 
-    pdf.output(
-        str(output_path)
-    )
+    pdf.output(str(output_path))
 
     return f"/{output_path.as_posix()}"
